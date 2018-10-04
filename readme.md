@@ -2,7 +2,7 @@
 
 Reads in a WAV and tries to generate a Bongo Cat video playing out the beats.
 
-# Install and Run
+## Install and Run
   - `pip install -r "requirements.txt"`
   - `python bongo_cat.py`
   - Choose codec and generate AVI
