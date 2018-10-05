@@ -1,26 +1,22 @@
 from scipy.io import wavfile
+import numpy as np
 import cv2
 import moviepy.editor as mpe
 import os, sys
 import time
+import math
 
 def thin(a, interval):
     return [a[i] for i in range(0, len(a), interval)]
 
-def energy(i, l, r):
-    return l[i] ** 2 + r[i] ** 2
-
-def avg_energy(l, r):
-    s = 0
-    for i in range(len(r)):
-        s += (l[i] ** 2 + r[i] ** 2) / len(r)
-    return s
+def energy(l, r):
+    return [math.sqrt(l[i] ** 2 + r[i] ** 2) for i in range(len(r))]
 
 # read in data
 in_name = 'test'
 out_name = 'output'
 
-fps = 15
+fps = 10
 sample_rt, sound = wavfile.read(in_name+'.wav')
 
 img1 = cv2.imread('clean_frame01.png')
@@ -34,11 +30,13 @@ interval = int(sample_rt / fps)
 left = thin(sound[:,0], interval)
 right = thin(sound[:,1], interval)
 
-cutoff = avg_energy(left, right)
+energy_l = energy(left, right)
+c = 0.00257 * np.var(energy_l) + 1.514
+cutoff = np.average(energy_l)
 
 for i in range(len(right)):
     
-    if energy(i, left, right) >= cutoff:
+    if energy_l[i] >= cutoff:
         video.write(img2)
     else:
         video.write(img1)
