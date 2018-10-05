@@ -112,3 +112,5 @@ dmypy.json
 
 # my stuff
 *.avi
+*.wav
+*.mp4
